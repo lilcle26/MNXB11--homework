@@ -1,0 +1,77 @@
+klilcle@cosmos-pkf:~/git/MNXB11-homework/homework3/calculatePI/scripts\[?2004h[lilcle@cosmos-pkf scripts]$ cat run_in_container_calculatePI.sh 
+[?2004l#!/bin/sh
+# This script runs the calculatePI.sh script using the container `mnxb11_al9.latest.sif` with minimum required parameters
+# -B mounts the project directory inside the container so that is visible also inside the container
+apptainer run -B /projects:/projects /projects/hep/fs11/share/mnxb11/containers/mnxb11_al9.latest.sif ./calculatePI_setup.sh
+
+
+klilcle@cosmos-pkf:~/git/MNXB11-homework/homework3/calculatePI/scripts\[?2004h[lilcle@cosmos-pkf scripts]$ cat calculatePI.sbatch-Lily.sh 
+[?2004l#!/bin/sh
+
+#SBATCH -J "MNXB11 Pi homework3"
+#SBATCH --time=00:07:20
+#SBATCH -A hep2023-1-6
+#SBATCH --mem 28000000K
+#SBATCH -o PI-%j.out
+#SBATCH -e PI-%j.out
+#SBATCH --nodes=3
+
+# Launch the calculatePI.sh application script using the container script
+run_in_container_calculatePI.sh
+klilcle@cosmos-pkf:~/git/MNXB11-homework/homework3/calculatePI/scripts\[?2004h[lilcle@cosmos-pkf scripts]$ sbatch calculatePI.sbatch-Lily.sh 
+[?2004lSubmitted batch job 3785291
+klilcle@cosmos-pkf:~/git/MNXB11-homework/homework3/calculatePI/scripts\[?2004h[lilcle@cosmos-pkf scripts]$ squeue- [K[K[K[K[K[K[K[Kscontrol show job 3785291
+[?2004lJobId=3785291 JobName=MNXB11 Pi homework3
+   UserId=lilcle(400213) GroupId=lilcle(400213) MCS_label=N/A
+   Priority=54552 Nice=0 Account=hep2023-1-6 QOS=parrun
+   JobState=RUNNING Reason=None Dependency=(null)
+   Requeue=1 Restarts=0 BatchFlag=1 Reboot=0 ExitCode=0:0
+   RunTime=00:00:20 TimeLimit=00:08:00 TimeMin=N/A
+   SubmitTime=2026-10-04T17:59:31 EligibleTime=2026-10-04T17:59:31
+   AccrueTime=2026-10-04T17:59:31
+   StartTime=2026-10-04T17:59:32 EndTime=2026-10-04T18:07:32 Deadline=N/A
+   SuspendTime=None SecsPreSuspend=0 LastSchedEval=2026-10-04T17:59:32 Scheduler=Main
+   Partition=hep AllocNode:Sid=cosmos-pkf:2372593
+   ReqNodeList=(null) ExcNodeList=(null)
+   NodeList=cx[09-11]
+   BatchHost=cx09
+   NumNodes=3 NumCPUs=3 NumTasks=3 CPUs/Task=1 ReqB:S:C:T=0:0:*:*
+   ReqTRES=cpu=3,mem=82032M,node=3,billing=3
+   AllocTRES=cpu=3,mem=82032M,node=3,billing=3
+   Socks/Node=* NtasksPerN:B:S:C=0:0:*:* CoreSpec=*
+   MinCPUsNode=1 MinMemoryNode=27344M MinTmpDiskNode=0
+   Features=(null) DelayBoot=00:00:00
+   OverSubscribe=OK Contiguous=0 Licenses=(null) Network=(null)
+   Command=/home/lilcle/git/MNXB11-homework/homework3/calculatePI/scripts/calculatePI.sbatch-Lily.sh
+   WorkDir=/home/lilcle/git/MNXB11-homework/homework3/calculatePI/scripts
+   StdErr=/home/lilcle/git/MNXB11-homework/homework3/calculatePI/scripts/PI-3785291.out
+   StdIn=/dev/null
+   StdOut=/home/lilcle/git/MNXB11-homework/homework3/calculatePI/scripts/PI-3785291.out
+   Power=
+   
+
+klilcle@cosmos-pkf:~/git/MNXB11-homework/homework3/calculatePI/scripts\[?2004h[lilcle@cosmos-pkf scripts]$ squeue -u lilcle
+[?2004l             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+           3785291       hep MNXB11 P   lilcle  R       0:26      3 cx[09-11]
+klilcle@cosmos-pkf:~/git/MNXB11-homework/homework3/calculatePI/scripts\[?2004h[lilcle@cosmos-pkf scripts]$ sbatch WASTED.sbatch 
+[?2004lSubmitted batch job 3785293
+klilcle@cosmos-pkf:~/git/MNXB11-homework/homework3/calculatePI/scripts\[?2004h[lilcle@cosmos-pkf scripts]$ sbatch WASTED.sbatch 
+[?2004lSubmitted batch job 3785294
+klilcle@cosmos-pkf:~/git/MNXB11-homework/homework3/calculatePI/scripts\[?2004h[lilcle@cosmos-pkf scripts]$ sbatch WASTED.sbatch 
+[?2004lSubmitted batch job 3785295
+klilcle@cosmos-pkf:~/git/MNXB11-homework/homework3/calculatePI/scripts\[?2004h[lilcle@cosmos-pkf scripts]$ s[Ksbatch WASTED.sbatch [5Pqueue -u lilclecontrol show job 3785291[9Pqueue -u lilcle
+[?2004l             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+           3785291       hep MNXB11 P   lilcle  R       0:55      3 cx[09-11]
+           3785294       hep   WASTED   lilcle  R       0:02      1 cx12
+           3785295       hep   WASTED   lilcle  R       0:02      1 cx12
+           3785293       hep   WASTED   lilcle  R       0:05      1 cx12
+klilcle@cosmos-pkf:~/git/MNXB11-homework/homework3/calculatePI/scripts\[?2004h[lilcle@cosmos-pkf scripts]$ scancel 3785293
+[?2004lklilcle@cosmos-pkf:~/git/MNXB11-homework/homework3/calculatePI/scripts\[?2004h[lilcle@cosmos-pkf scripts]$ scancel 3785293[K5
+[?2004lklilcle@cosmos-pkf:~/git/MNXB11-homework/homework3/calculatePI/scripts\[?2004h[lilcle@cosmos-pkf scripts]$ scancel 37852953queue -u lilcle
+[?2004l             JOBID PARTITION     NAME     USER ST       TIME  NODES NODELIST(REASON)
+           3785291       hep MNXB11 P   lilcle  R       1:15      3 cx[09-11]
+           3785294       hep   WASTED   lilcle  R       0:22      1 cx12
+klilcle@cosmos-pkf:~/git/MNXB11-homework/homework3/calculatePI/scripts\[?2004h[lilcle@cosmos-pkf scripts]$ s[Kcat slurm-3785294.out 
+[?2004lThis is a test
+klilcle@cosmos-pkf:~/git/MNXB11-homework/homework3/calculatePI/scripts\[?2004h[lilcle@cosmos-pkf scripts]$ exit
+[?2004lexit
